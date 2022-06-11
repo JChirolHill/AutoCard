@@ -1,0 +1,164 @@
+.modal { 
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+    padding: 1rem;
+    background: rgba(0,0,0,0.4);
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.15s ease-in;
+}
+
+.modal.is-visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.modal-dialog {
+    position: relative;
+    width: 35%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow: scroll;
+    border-radius: 5px;
+    background: #fff;
+    cursor: default;
+}
+
+.modal-dialog > * {
+    padding: 1rem;
+}
+
+.modal-header,
+.modal-footer {
+    padding: 0.5em 1em;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #00c402;
+    color: white;
+}
+
+.modal-footer {
+    text-align: right;
+}
+
+.modal-header .modal-close {
+    font-size: 1.5rem;
+}
+
+.modal form > div > label {
+    display: block;
+    font-size: 16px;
+}
+
+.modal input {
+    margin-bottom: 0.75em;
+    padding: 0.2em;
+    width: 100%;
+    font-size: 25px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+}
+
+.modal h5 {
+    color: red;
+    text-align: center;
+}
+
+.btn-ac {
+    background-color: #00c402;
+    color: white;
+    padding: 0.5em;
+    border-radius: 4px;
+    margin-left: 0.5em;
+    font-size: 16px;
+}
+
+.btn-ac:hover {
+    background-color: #009903;
+    color: white;
+}
+
+.text-ac {
+    color:#00c402;
+}
+
+.container_wrap .btn-ac {
+    position: absolute;
+    top: 39px;
+    right: 307px;
+    z-index: 11; /* To sit on top of share btn */
+}
+
+/* Toggle */
+.switch-container {
+    padding: 0.5em 0;
+    line-height: 26px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 26px;
+    margin-right: 0.5em;
+}
+
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 34px;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    border-radius: 50%;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #00c402;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #ccc;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(19px);
+    -ms-transform: translateX(19px);
+    transform: translateX(19px);
+}
