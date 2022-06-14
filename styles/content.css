@@ -1,4 +1,4 @@
-.modal { 
+.modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -14,6 +14,9 @@
     visibility: hidden;
     opacity: 0;
     transition: all 0.15s ease-in;
+    color: black;
+    font-size: 14px;
+    font-family: Helvetica, sans-serif;
 }
 
 .modal.is-visible {
@@ -73,6 +76,10 @@
     box-sizing: border-box;
 }
 
+.modal h2 {
+    margin: 0;
+}
+
 .modal h5 {
     color: red;
     text-align: center;
@@ -85,11 +92,13 @@
     border-radius: 4px;
     margin-left: 0.5em;
     font-size: 16px;
+    border: none;
 }
 
 .btn-ac:hover {
     background-color: #009903;
     color: white;
+    cursor: pointer;
 }
 
 .text-ac {
@@ -104,12 +113,12 @@
 }
 
 /* Toggle */
-.switch-container {
+.modal .switch-container {
     padding: 0.5em 0;
     line-height: 26px;
 }
 
-.switch {
+.modal .switch {
     position: relative;
     display: inline-block;
     width: 45px;
@@ -117,13 +126,13 @@
     margin-right: 0.5em;
 }
 
-.switch input { 
+.modal .switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-.slider {
+.modal .slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -136,7 +145,7 @@
     transition: .4s;
 }
 
-.slider:before {
+.modal .slider:before {
     position: absolute;
     content: "";
     height: 18px;
@@ -149,15 +158,15 @@
     transition: .4s;
 }
 
-input:checked + .slider {
+.modal input:checked + .slider {
     background-color: #00c402;
 }
 
-input:focus + .slider {
+.modal input:focus + .slider {
     box-shadow: 0 0 1px #ccc;
 }
 
-input:checked + .slider:before {
+.modal input:checked + .slider:before {
     -webkit-transform: translateX(19px);
     -ms-transform: translateX(19px);
     transform: translateX(19px);

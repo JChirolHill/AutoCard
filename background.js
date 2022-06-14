@@ -4,8 +4,8 @@ chrome.storage.local.get({autocard_cards: []}, function(response) {
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type === 'add-card') {
-        // Check card not already created
         chrome.storage.local.get({autocard_cards: []}, function(response) {
+            // Check card not already created
             let cards = response.autocard_cards;
             let duplicate = false;
             cards.forEach((card) => {
@@ -15,64 +15,68 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                     return;
                 }
             });
+            if (duplicate) {
+                return;
+            }
 
-            // Storing new card
-            if (!duplicate) {
-                // Add to card array
-                cards.push({
-                    cn: request.card.cn,
-                    en: request.card.en,
-                    py: request.card.py,
-                    hsk: request.card.hsk,
-                    clozeIndex: -1
+            // Add new card to card array
+            cards.push({
+                cn: request.card.cn,
+                en: request.card.en,
+                py: request.card.py,
+                hsk: request.card.hsk,
+                clozeIndex: -1
+            });
+            chrome.storage.local.set({autocard_cards: cards});
+
+            // Update cloze array
+            chrome.storage.local.get({autocard_clozes: []}, function(response) {
+                let clozes = response.autocard_clozes;
+                let indexCloze = -1;
+
+                // Check if sentence already exists in cloze array
+                // Possible to have one sentence for multiple vocab terms
+                // If so, want to correctly add the cloze to that sentence rather than create new
+                clozes.forEach((cloze, index) => {
+                    if (cloze.cnsOrig === request.card.cns) {
+                        indexCloze = index;
+                        return;
+                    }
                 });
+
+                // Add to cloze array
+                if (indexCloze == -1) { // Add new cloze sentence (cloze sentence only has one term or first term of multiple)
+                    clozes.push({
+                        cnsOrig: request.card.cns,
+                        cns: insertClozeDel(request.card.cn, request.card.cns, 1 /*indexCloze*/),
+                        ens: request.card.ens,
+                        img: request.card.img,
+                        nextCloze: 2 // Next cloze term will use this index in Anki card: {{c2:...}}
+                    });
+                    indexCloze = clozes.length - 1; // Since added new, index is of the last element of cloze array
+                }
+                else { // Add to existing cloze sentence (cloze sentence has multiple vocab terms)
+                    let clozed = insertClozeDel(request.card.cn, clozes[indexCloze].cns, clozes[indexCloze].nextCloze);
+                    clozes[indexCloze].nextCloze++;
+                    clozes[indexCloze].cns = clozed; // Replace Chinese sentence with updated clozed sentence
+                }
+
+                chrome.storage.local.set({autocard_clozes: clozes});
+
+                // Update mapping between cards and clozes
+                cards[cards.length - 1].clozeIndex = indexCloze;
                 chrome.storage.local.set({autocard_cards: cards});
 
-                chrome.storage.local.get({autocard_clozes: []}, function(response) {
-                    let clozes = response.autocard_clozes;
-                    let indexCloze = -1;
-                    // Check if exists in cloze array
-                    clozes.forEach((cloze, index) => {
-                        if (cloze.cnsOrig === request.card.cns) {
-                            indexCloze = index;
-                            return;
-                        }
-                    });
+                sendResponse({ error: null });
 
-                    // Add to cloze array
-                    if (indexCloze == -1) { // Add new cloze sentence
-                        clozes.push({
-                            cnsOrig: request.card.cns,
-                            cns: insertClozeDel(request.card.cn, request.card.cns, 1),
-                            ens: request.card.ens,
-                            img: request.card.img,
-                            nextCloze: 2
-                        });
-                        indexCloze = clozes.length - 1;
-                    }
-                    else { // Add to existing cloze sentence
-                        let clozed = insertClozeDel(request.card.cn, clozes[indexCloze].cns, clozes[indexCloze].nextCloze);
-                        clozes[indexCloze].nextCloze++;
-                        clozes[indexCloze].cns = clozed;
-                    }
-
-                    chrome.storage.local.set({autocard_clozes: clozes});
-
-                    // Update mapping between cards and clozes
-                    cards[cards.length - 1].clozeIndex = indexCloze;
-                    chrome.storage.local.set({autocard_cards: cards});
-
-                    sendResponse({ error: null });
-
-                    updateBadge(cards.length);
-                });
-            }
+                updateBadge(cards.length);
+            });
         });
 
         return true; // To keep port open
     }
     else if (request.type === 'get-cards') {
-        chrome.storage.local.get({autocard_cards: []}, function(response) {
+        chrome.storage.local.get({autocard_cards: []}, response => {
             sendResponse(response.autocard_cards);
         });
 
@@ -141,6 +145,6 @@ function insertClozeDel(word, sentence, indexCloze) {
 }
 
 function updateBadge(numCards) {
-    chrome.browserAction.setBadgeText({ text: (numCards > 0 ? String(numCards) : null) });
+    chrome.browserAction.setBadgeText({ text: (numCards > 0 ? String(numCards) : '') });
     chrome.browserAction.setBadgeBackgroundColor({ color: '#cc0000' });
 }

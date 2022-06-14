@@ -11,7 +11,13 @@
             "run_at": "document_end",
             "matches": ["*://dict.naver.com/linedict/zhendict/*"],
             "css": ["styles/content.css"],
-            "js": ["pinyin-separate.min.js", "content.js"]
+            "js": ["pinyin-separate.min.js", "utils.js", "content-dict.js"]
+        },
+        {
+            "run_at": "document_end",
+            "matches": ["http://localhost:3000/*"],
+            "css": ["styles/content.css"],
+            "js": ["utils.js", "content-hskreader.js"]
         }
     ],
     "browser_action": {

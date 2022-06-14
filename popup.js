@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         // Using wrong dictionary, show redirect to correct dictionary
         if (tabs[0].url.search(/https:\/\/dict\.naver\.com\/linedict\/enzhdict\/#\/encn.*/) < 0) { // Valid url
-            // Show html for valid url
+            // Show template for valid url
             document.querySelector('#content').innerHTML = document.getElementById('template-correct-url').innerHTML;
 
             // Update total words display whenever add word
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }, false);
 
-            // Edit/delete card handler
+            // Delete card handler
             document.querySelector('.container').addEventListener('click' , function(event) {
                 if (event.target.tagName.toLowerCase() === 'i') {
                     if (confirm('Are you sure you want to delete this word?')) {
@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hyperlink to correct dictionary handler
             document.querySelector('small a').addEventListener('click', function() {
                 chrome.tabs.update({url: this.href});
+                window.close();
                 return false;
             });
         }
