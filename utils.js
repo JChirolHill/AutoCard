@@ -25,7 +25,10 @@ function parseTonesToNumbers(pinyinStr, isPinyinSeparated = false) {
         'ū': 'u1',
         'ú': 'u2',
         'ǔ': 'u3',
-        'ù': 'u4'
+        'ù': 'u4',
+        'ǚ': 'v3',
+        'ǜ': 'v4',
+        'ü': 'v5'
     };
 
     // Add spaces to pinyin string
@@ -57,7 +60,7 @@ function parseTonesToNumbers(pinyinStr, isPinyinSeparated = false) {
 
 // Determines if a character is a sentence end marker
 function isSentenceEnd(character) {
-    return character === '。' || character === ' ！' || character === '？' || character === '\n';
+    return character.match(/(。|！|？|\n|…)/g);
 }
 
 function setupModal() {

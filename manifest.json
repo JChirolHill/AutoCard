@@ -15,7 +15,7 @@
         },
         {
             "run_at": "document_end",
-            "matches": ["http://localhost:3000/*"],
+            "matches": ["http://localhost:3000/*", "https://chinese-hsk-reader.surge.sh/*"],
             "css": ["styles/content.css"],
             "js": ["utils.js", "content-hskreader.js"]
         }

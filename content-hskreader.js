@@ -1,5 +1,5 @@
 const TIME_BETWEEN_INTERVALS = 500; // milliseconds
-const LOAD_TIMEOUT = 15 * 1000; // Stop interval after this time (ms) if page takes too long to load
+const LOAD_TIMEOUT = 30 * 1000; // Stop interval after this time (ms) if page takes too long to load
 const sentences = [];
 
 // Wait until Chinese text loads on page before attaching event listeners
@@ -27,9 +27,14 @@ function processHskText() {
     document.querySelector('.main-content').childNodes.forEach((paragraph) => {
         paragraph.childNodes.forEach((term) => {
             // Keep track of all sentences and add data attribute with sentence index to each term
-            if (isSentenceEnd(term.innerText)) {
+            const terminatingCharArr = isSentenceEnd(term.innerText)
+            if (terminatingCharArr) {
                 if (tempSentence) { // Empty temp sentence means to sentence end markers in a row, ignore
-                    sentences.push(tempSentence);
+                    const terminatingCharToAdd = terminatingCharArr[0] !== '。' && terminatingCharArr[0] !== '\n'
+                        ? terminatingCharArr[0]
+                        : '';
+                    const optionalClosingQuote = tempSentence[0] === '“' ? '”' : '';
+                    sentences.push(tempSentence + terminatingCharToAdd + optionalClosingQuote);
                     tempSentence = '';
                 }
             }
